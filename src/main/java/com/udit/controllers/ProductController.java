@@ -1,11 +1,13 @@
 package com.udit.controllers;
 
+import com.udit.domain.Product;
 import com.udit.services.ProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 
 /**
  * Created by udit on 19/9/17.
@@ -32,5 +34,17 @@ public class ProductController {
     public String getProduct(@PathVariable Integer id , Model model){
         model.addAttribute("product" , productService.getProductById(id));
         return "product";
+    }
+
+    @RequestMapping("/product/new")
+    public String newProduct(Model model){
+         model.addAttribute("product", new Product());
+         return "productform";
+    }
+
+    @RequestMapping(value = "/product", method = RequestMethod.POST)
+    public String saveOrUpdate(Product product){
+        Product savedProduct = productService.saveOrUpdate(product);
+        return "redirect:/product/"+savedProduct.getId();
     }
 }
